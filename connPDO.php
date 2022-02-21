@@ -8,88 +8,66 @@ class connPDO
     private string $password;
     private string $dbName;
 
-    public function __construct($server, $user, $password, $dbName){
-        $this->setServer($server);
-        $this->setUser($user);
-        $this->setPassword($password);
-        $this->setDbName($dbName);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServer()
-    {
-        return $this->server;
+    public function __construct(){
+        $this->setServer('localhost');
+        $this->setUser('root');
+        $this->setPassword('');
+        $this->setDbName('');
     }
 
     /**
      * @param mixed $server
+     * @return connPDO
      */
-    public function setServer($server): void
+    public function setServer($server): self
     {
         $this->server = $server;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
+        return $this;
     }
 
     /**
      * @param mixed $user
+     * @return connPDO
      */
-    public function setUser($user): void
+    public function setUser($user): self
     {
         $this->user = $user;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPassword()
-    {
-        return $this->password;
+        return $this;
     }
 
     /**
      * @param mixed $password
+     * @return connPDO
      */
-    public function setPassword($password): void
+    public function setPassword($password): self
     {
         $this->password = $password;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDbName()
-    {
-        return $this->dbName;
+        return $this;
     }
 
     /**
      * @param mixed $dbName
+     * @return connPDO
      */
-    public function setDbName($dbName): void
+    public function setDbName($dbName): self
     {
         $this->dbName = $dbName;
+        return $this;
     }
 
     /**
      * db connection
      */
-    public function conn () {
+    public function conn () : ?PDO {
         try {
-            $conn = new PDO("mysql:host=".$this->getServer().";dbname=".$this->getDbName()."charset=utf8", $this->getUser(), $this->getPassword());
+            $conn = new PDO("mysql:host=".$this->server.";dbname=".$this->dbName.";charset=utf8", $this->user, $this->password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Connection ok";
+            $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
+            return $conn;
         }
         catch (PDOException $e){
             echo "Error : " . $e->getMessage();
         }
+        return null;
     }
 }
